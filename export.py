@@ -22,20 +22,31 @@ def main():
     output_chunk_size = 5000
     buffer = []
     
-    all_columns = set()
+    all_columns: set[str] = set()
+    count: int = 0
     for doc in read_the_index():
+        if count % 1000 == 0:
+            print(f"Collecting columns {count}")
         all_columns.update(doc["_source"].keys())
-    all_columns = list(all_columns)
+        count+=1
+        
+    final_list_of_columns: list[str] = list(all_columns)
     
+    count = 0
     for doc in read_the_index():
+        if count % 1000 == 0:
+            print(f"Collecting data {count}")
+        count+=1
+            
         source = flatten_arrays(doc["_source"])
         buffer.append(source)
         
         # Write in chunks
         if len(buffer) >= output_chunk_size:
-            produce_output(buffer=buffer, flags=flags, all_columns=all_columns)
+            print(f"Writing data {count}")
+            produce_output(buffer=buffer, flags=flags, all_columns=final_list_of_columns)
     
-    if buffer: produce_output(buffer=buffer, flags=flags, all_columns=all_columns)    # Write remaining
+    if buffer: produce_output(buffer=buffer, flags=flags, all_columns=final_list_of_columns)    # Write remaining
 
 def read_the_index():
     return scan(

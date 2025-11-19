@@ -4,7 +4,7 @@ CSV_OUTPUT_DIR = "output_csv"
 JSON_OUTPUT_DIR = "output_json"
 
 SHOULD_OUTPUT_CSV = True
-SHOULD_OUTPUT_JSON = True
+SHOULD_OUTPUT_JSON = False
 
 es_client = Elasticsearch("http://localhost:9200")
 index_name = "products-v1-1"
